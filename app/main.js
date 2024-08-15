@@ -1,6 +1,9 @@
 function matchPattern(inputLine, pattern) {
   if (pattern.length === 1) {
+    
     return inputLine.includes(pattern);
+  } else if (pattern.startsWith("\\d")) {
+    return pattern.some((c) => !isNaN(c));
   } else {
     throw new Error(`Unhandled pattern ${pattern}`);
   }
