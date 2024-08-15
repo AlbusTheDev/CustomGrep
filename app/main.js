@@ -3,7 +3,13 @@ function matchPattern(inputLine, pattern) {
     
     return inputLine.includes(pattern);
   } else if (pattern.startsWith("\\d")) {
-    return pattern.some((c) => !isNaN(c));
+
+    for (const c of inputLine) {
+      if (!isNaN(c)) return true;
+    }
+
+    return false;
+
   } else {
     throw new Error(`Unhandled pattern ${pattern}`);
   }
@@ -23,8 +29,10 @@ function main() {
 
   // Uncomment this block to pass the first stage
   if (matchPattern(inputLine, pattern)) {
+    console.log(0);
     process.exit(0);
   } else {
+    console.log(1);
     process.exit(1);
   }
 }
