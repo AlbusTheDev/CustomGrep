@@ -4,8 +4,15 @@ function matchPattern(inputLine, pattern) {
     return inputLine.includes(pattern);
   } else if (pattern.startsWith("\\d")) {
 
+    return inputLine
+
+    return false;
+
+  } else if (pattern.startsWith("\\w")) {
+    
     for (const c of inputLine) {
-      if (!isNaN(c)) return true;
+      const code = c.charCodeAt(0);
+      if (!isNaN(c) || (code >= 65 && code <= 90) || (code >= 97 && code <= 122) || c == '_') return true;
     }
 
     return false;
