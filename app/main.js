@@ -1,46 +1,61 @@
+const {customRegex} = require("./regex");
+
 function matchPattern(inputLine, pattern) {
   if (pattern.length === 1) {
     
     return inputLine.includes(pattern);
-  } else if (pattern.startsWith("\\d")) {
+  } else if (pattern.length > 1) {
+    var arr = getPattern(pattern);
+    if (arr.length === 0) return true;
 
-    for (let i = 0; i < inputLine.length; i++) {
-      const code = inputLine[i].charCodeAt(0);
-      if (code >= 49 && code <= 57) return true;
+    for (let i = 0; i < (inputLine.length - (arr.length - 1)); ) {
+      //const inputElement = inputLine[i];
+      var flag = true;
+      let j = 0;
+      for (; j < arr.length; j++) {
+        const patternElement = arr[j];
+        
+        if (patternElement === "\\d") {
+          flag = customRegex.matchNumber(inputLine[i + j]);
+        } else if (patternElement === "\\w") {
+          flag = customRegex.matchAlphanumeric(inputLine[i + j]);
+        } else if (patternElement[0] === "[") {
+          flag = customRegex.matchCharacters(inputLine[i + j], patternElement.substr(1, patternElement.length - 1));
+        }
+
+        if (!flag) break;
+      }
+
+      if (flag) return true;
+
+      i += j + 1;
     }
 
     return false;
-
-  } else if (pattern.startsWith("\\w")) {
     
-    for (const c of inputLine) {
-      const code = c.charCodeAt(0);
-      if (!isNaN(c) || (code >= 65 && code <= 90) || (code >= 97 && code <= 122) || c == '_') return true;
-    }
-
-    return false;
-
-  } else if (pattern.startsWith("[") && pattern.endsWith("]")) {
-    var obj = {};
-    
-    for (const c of inputLine) {
-      if (obj[c]) obj[c]++;
-      else obj[c] = 1;
-    }
-
-    var flag = true;
-
-    if (pattern[1] === "^") flag = false;
-
-    for (const c of pattern) {
-      if (obj[c]) return flag;
-    }
-
-    return !flag;
-
   } else {
     throw new Error(`Unhandled pattern ${pattern}`);
   }
+}
+
+function getPattern(pattern) {
+  var arr = [];
+
+    for (let i = 0; i < pattern.length;) {
+      if (pattern[i] === '\\') {
+        arr.push("\\" + pattern[++i]);
+        i++;
+      } else if (pattern[i] === '[') {
+        const index = pattern.indexOf(']', i) + 1;
+        arr.push(pattern.substr(i, index));
+        i = index;
+      } else {
+        arr.push(pattern[i]);
+        i++;
+      }
+    }
+
+    return arr;
 }
 
 function main() {
