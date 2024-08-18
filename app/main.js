@@ -6,7 +6,7 @@ function matchPattern(inputLine, pattern) {
 
     for (let i = 0; i < inputLine.length; i++) {
       const code = inputLine[i].charCodeAt(0);
-      if (charCode >= 49 && charCode <= 57) return true;
+      if (code >= 49 && code <= 57) return true;
     }
 
     return false;
