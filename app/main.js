@@ -1,23 +1,57 @@
 const {customRegex} = require("./regex");
 
 function matchPattern(inputLine, pattern) {
+
+  
+
   if (pattern.length === 1) {
     
     return inputLine.includes(pattern);
   } else if (pattern[0] === "^") {
-    var arr = getPattern(pattern.substr(1));
-    if (arr.length > inputLine.length) return false;
+
+    var arr = [];
+    if (pattern[pattern.length - 1] === "$") {
+      arr = customRegex.getPattern(pattern.substr(1, pattern.length - 2));
+      
+      if (arr.length != inputLine.length) return false;
+    } else {
+      arr = customRegex.getPattern(pattern.substr(1));
+      
+      if (arr.length > inputLine.length) return false;
+    }
+
+    
 
     for (let i = 0; i < arr.length; i++) {
       const patternElement = arr[i];
       const inputElement = inputLine[i];
 
-      if (!handlePattern(patternElement, inputElement)) return false;
+      if (!customRegex.handlePattern(patternElement, inputElement)) return false;
     }
 
     return true;
+  } else if (pattern[pattern.length - 1] === "$") {
+    
+    var arr = customRegex.getPattern(pattern.substr(0, pattern.length - 1));
+    
+    if (arr.length > inputLine.length) return false;
+    
+    
+    var j = inputLine.length - arr.length; 
+
+    for (let i = 0; i < arr.length; i++) {
+      const patternElement = arr[i];
+      const inputElement = inputLine[j];
+
+      if (!customRegex.handlePattern(patternElement, inputElement)) return false;
+      j++;
+    }
+
+    return true;
+
   } else if (pattern.length > 1) {
-    var arr = getPattern(pattern);
+    
+    var arr = customRegex.getPattern(pattern);
     
     if (arr.length === 0) return true;
 
@@ -28,7 +62,7 @@ function matchPattern(inputLine, pattern) {
       for (; j < arr.length; j++) {
         const patternElement = arr[j];
 
-        flag = handlePattern(patternElement, inputLine[i + j]);
+        flag = customRegex.handlePattern(patternElement, inputLine[i + j]);
 
         if (!flag) break;
       }
@@ -40,42 +74,6 @@ function matchPattern(inputLine, pattern) {
     
   } else {
     throw new Error(`Unhandled pattern ${pattern}`);
-  }
-}
-
-function getPattern(pattern) {
-  var arr = [];
-
-    for (let i = 0; i < pattern.length;) {
-      if (pattern[i] === '\\') {
-        arr.push("\\" + pattern[++i]);
-        i++;
-      } else if (pattern[i] === '[') {
-        const index = pattern.indexOf(']', i) + 1;
-        arr.push(pattern.substr(i, index));
-        i = index;
-      } else {
-        arr.push(pattern[i]);
-        i++;
-      }
-    }
-
-    return arr;
-}
-
-function handlePattern(pattern, input) {
-  if (pattern === "\\d") {
-    return customRegex.matchNumber(input);
-    
-  } else if (pattern === "\\w") {
-    return customRegex.matchAlphanumeric(input);
-    
-  } else if (pattern[0] === "[") {
-    return customRegex.matchCharacters(input, pattern.substr(1, pattern.length - 1));
-    
-  } else {
-    return pattern === input;
-    
   }
 }
 
