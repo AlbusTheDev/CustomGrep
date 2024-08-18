@@ -6,10 +6,10 @@ function matchPattern(inputLine, pattern) {
     return inputLine.includes(pattern);
   } else if (pattern.length > 1) {
     var arr = getPattern(pattern);
-    //console.log(arr);
+    
     if (arr.length === 0) return true;
 
-    for (let i = 0; i < (inputLine.length - (arr.length)); ) {
+    for (let i = 0; i < (inputLine.length - (arr.length - 1)); ) {
 
       var flag = true;
       let j = 0;
