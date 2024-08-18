@@ -28,11 +28,15 @@ function matchPattern(inputLine, pattern) {
       else obj[c] = 1;
     }
 
+    var flag = true;
+
+    if (pattern[1] === "^") flag = false;
+
     for (const c of pattern) {
-      if (obj[c]) return true;
+      if (obj[c]) return flag;
     }
 
-    return false;
+    return !flag;
 
   } else {
     throw new Error(`Unhandled pattern ${pattern}`);
