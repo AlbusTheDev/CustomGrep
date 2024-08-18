@@ -4,38 +4,36 @@ function matchPattern(inputLine, pattern) {
   if (pattern.length === 1) {
     
     return inputLine.includes(pattern);
+  } else if (pattern[0] === "^") {
+    var arr = getPattern(pattern.substr(1));
+    if (arr.length > inputLine.length) return false;
+
+    for (let i = 0; i < arr.length; i++) {
+      const patternElement = arr[i];
+      const inputElement = inputLine[i];
+
+      if (!handlePattern(patternElement, inputElement)) return false;
+    }
+
+    return true;
   } else if (pattern.length > 1) {
     var arr = getPattern(pattern);
     
     if (arr.length === 0) return true;
 
-    for (let i = 0; i < (inputLine.length - (arr.length - 1)); ) {
+    for (let i = 0; i < (inputLine.length - (arr.length - 1)); i++) {
 
       var flag = true;
       let j = 0;
       for (; j < arr.length; j++) {
         const patternElement = arr[j];
-        
-        if (patternElement === "\\d") {
-          flag = customRegex.matchNumber(inputLine[i + j]);
-          
-        } else if (patternElement === "\\w") {
-          flag = customRegex.matchAlphanumeric(inputLine[i + j]);
-          
-        } else if (patternElement[0] === "[") {
-          flag = customRegex.matchCharacters(inputLine[i + j], patternElement.substr(1, patternElement.length - 1));
-          
-        } else {
-          flag = patternElement === inputLine[i + j];
-          
-        }
+
+        flag = handlePattern(patternElement, inputLine[i + j]);
 
         if (!flag) break;
       }
 
       if (flag) return true;
-
-      i += j + 1;
     }
 
     return false;
@@ -65,6 +63,22 @@ function getPattern(pattern) {
     return arr;
 }
 
+function handlePattern(pattern, input) {
+  if (pattern === "\\d") {
+    return customRegex.matchNumber(input);
+    
+  } else if (pattern === "\\w") {
+    return customRegex.matchAlphanumeric(input);
+    
+  } else if (pattern[0] === "[") {
+    return customRegex.matchCharacters(input, pattern.substr(1, pattern.length - 1));
+    
+  } else {
+    return pattern === input;
+    
+  }
+}
+
 function main() {
   const pattern = process.argv[3];
   const inputLine = require("fs").readFileSync(0, "utf-8").trim();
@@ -79,6 +93,7 @@ function main() {
 
   // Uncomment this block to pass the first stage
   if (matchPattern(inputLine, pattern)) {
+    //console.log(0);
     process.exit(0);
   } else {
     process.exit(1);
