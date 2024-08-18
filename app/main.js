@@ -20,6 +20,20 @@ function matchPattern(inputLine, pattern) {
 
     return false;
 
+  } else if (pattern.startsWith("[") && pattern.endsWith("]")) {
+    var obj = {};
+    
+    for (const c of inputLine) {
+      if (obj[c]) obj[c]++;
+      else obj[c] = 1;
+    }
+
+    for (const c of pattern) {
+      if (obj[c]) return true;
+    }
+
+    return false;
+
   } else {
     throw new Error(`Unhandled pattern ${pattern}`);
   }
