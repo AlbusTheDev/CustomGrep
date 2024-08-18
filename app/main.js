@@ -6,10 +6,11 @@ function matchPattern(inputLine, pattern) {
     return inputLine.includes(pattern);
   } else if (pattern.length > 1) {
     var arr = getPattern(pattern);
+    console.log(arr);
     if (arr.length === 0) return true;
 
-    for (let i = 0; i < (inputLine.length - (arr.length - 1)); ) {
-      //const inputElement = inputLine[i];
+    for (let i = 0; i < (inputLine.length - (arr.length)); ) {
+
       var flag = true;
       let j = 0;
       for (; j < arr.length; j++) {
@@ -17,10 +18,16 @@ function matchPattern(inputLine, pattern) {
         
         if (patternElement === "\\d") {
           flag = customRegex.matchNumber(inputLine[i + j]);
+          
         } else if (patternElement === "\\w") {
           flag = customRegex.matchAlphanumeric(inputLine[i + j]);
+          
         } else if (patternElement[0] === "[") {
           flag = customRegex.matchCharacters(inputLine[i + j], patternElement.substr(1, patternElement.length - 1));
+          
+        } else {
+          flag = patternElement === inputLine[i + j];
+          
         }
 
         if (!flag) break;
