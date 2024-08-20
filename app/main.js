@@ -35,12 +35,13 @@ function matchPattern(inputLine, pattern) {
     
     if (arr.length === 0) return true;
 
-    for (let i = 0; i < (inputLine.length - (arr.length - 1)); i++) {
+    for (let i = 0; i < (inputLine.length - (arr.length - 2)); i++) {
 
       var flag = true;
       let j = 0;
       for (; j < arr.length; j++) {
         const patternElement = arr[j];
+
         if (patternElement[1] === "+") {
           flag = patternElement[0] === inputLine[i + j];
           while (inputLine[i + j + 1] === inputLine[i + j] && flag) {
@@ -48,6 +49,7 @@ function matchPattern(inputLine, pattern) {
           }
           
         } else if (patternElement[1] === "?") {
+          flag = true;
           if (inputLine[i + j] !== patternElement[0]) {
             i--;
           }
