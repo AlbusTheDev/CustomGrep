@@ -28,7 +28,18 @@ function matchPattern(inputLine, pattern) {
 		var j = inputLine.length - arr.length; 
 		return customRegex.matchStartEnd(inputLine, arr, j);
 
-	} else if (pattern.length > 1) {
+	} else if (pattern[0] === "(") {
+        var patternArr = pattern.substr(1, pattern.length - 2).split('|');
+        
+        for (let i = 0; i < patternArr.length; i++) {
+            const element = patternArr[i];
+            
+            if (matchPattern(inputLine, element)) return true;
+        }
+
+        return false;
+        
+    } else if (pattern.length > 1) {
 		
 		var arr = customRegex.getPattern(pattern);
 		
