@@ -12,42 +12,22 @@ function matchPattern(inputLine, pattern) {
     var arr = [];
     if (pattern[pattern.length - 1] === "$") {
       arr = customRegex.getPattern(pattern.substr(1, pattern.length - 2));
-      
-      if (arr.length != inputLine.length) return false;
+      if (arr.length >= inputLine.length) return false;
     } else {
       arr = customRegex.getPattern(pattern.substr(1));
-      
       if (arr.length > inputLine.length) return false;
     }
 
-    
+    return customRegex.matchStartEnd(inputLine, arr, 0);
 
-    for (let i = 0; i < arr.length; i++) {
-      const patternElement = arr[i];
-      const inputElement = inputLine[i];
-
-      if (!customRegex.handlePattern(patternElement, inputElement)) return false;
-    }
-
-    return true;
   } else if (pattern[pattern.length - 1] === "$") {
     
     var arr = customRegex.getPattern(pattern.substr(0, pattern.length - 1));
     
     if (arr.length > inputLine.length) return false;
     
-    
     var j = inputLine.length - arr.length; 
-
-    for (let i = 0; i < arr.length; i++) {
-      const patternElement = arr[i];
-      const inputElement = inputLine[j];
-
-      if (!customRegex.handlePattern(patternElement, inputElement)) return false;
-      j++;
-    }
-
-    return true;
+    return customRegex.matchStartEnd(inputLine, arr, j);
 
   } else if (pattern.length > 1) {
     
@@ -61,8 +41,17 @@ function matchPattern(inputLine, pattern) {
       let j = 0;
       for (; j < arr.length; j++) {
         const patternElement = arr[j];
+        if (patternElement[1] === "+") {
+          flag = patternElement[0] === inputLine[i + j];
+          while (inputLine[i + j + 1] === inputLine[i + j] && flag) {
+            i++;
+          }
+          
+        } else {
 
-        flag = customRegex.handlePattern(patternElement, inputLine[i + j]);
+          flag = customRegex.handlePattern(patternElement, inputLine[i + j]);
+
+        }
 
         if (!flag) break;
       }
