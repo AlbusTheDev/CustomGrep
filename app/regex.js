@@ -1,6 +1,6 @@
 var customRegex = {
 
-    matchNumber: function (input, index) {
+    matchNumber: function (input) {
 
         const code = input.charCodeAt(0);
         return(code >= 49 && code <= 57);
@@ -39,6 +39,8 @@ var customRegex = {
                 while (input[j + 1] === input[j] && flag) {
                     j++;
                 }
+            } else if (patternElement[1] === "?") {
+                if (patternElement[0] !== inputElement) continue;
             } else if (!this.handlePattern(patternElement, inputElement)) return false;
 
             j++;
@@ -57,7 +59,7 @@ var customRegex = {
                 const index = pattern.indexOf(']', i) + 1;
                 arr.push(pattern.substr(i, index));
                 i = index;
-            } else if (pattern[i] === '+') {
+            } else if (pattern[i] === '+' || pattern[i] === '?') {
                 arr[arr.length - 1] = arr[arr.length - 1] + "+";
                 i++;
             } else {
@@ -68,21 +70,16 @@ var customRegex = {
 
         return arr;
     },
-    handlePattern: function (pattern, input, obj) {
+    handlePattern: function (pattern, input) {
         if (pattern === "\\d") {
-            obj = {};
             return customRegex.matchNumber(input);
         } else if (pattern === "\\w") {
-            obj = {};
             return customRegex.matchAlphanumeric(input);
         } else if (pattern[0] === "[") {
-            obj = {};
             return customRegex.matchCharacters(input, pattern.substr(1, pattern.length - 1));
         } else if (pattern === ".") {
-            obj = {};
             return true;
         } else {
-            obj = {};
             return pattern === input;
         }
     }

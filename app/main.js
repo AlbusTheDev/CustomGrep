@@ -47,6 +47,10 @@ function matchPattern(inputLine, pattern) {
             i++;
           }
           
+        } else if (patternElement[1] === "?") {
+          if (inputLine[i + j] !== patternElement[0]) {
+            i--;
+          }
         } else {
 
           flag = customRegex.handlePattern(patternElement, inputLine[i + j]);
