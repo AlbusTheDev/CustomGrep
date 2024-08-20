@@ -60,7 +60,7 @@ var customRegex = {
                 arr.push(pattern.substr(i, index));
                 i = index;
             } else if (pattern[i] === '+' || pattern[i] === '?') {
-                arr[arr.length - 1] = arr[arr.length - 1] + "+";
+                arr[arr.length - 1] = arr[arr.length - 1] + pattern[i];
                 i++;
             } else {
                 arr.push(pattern[i]);
