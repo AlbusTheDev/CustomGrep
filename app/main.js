@@ -84,10 +84,10 @@ function main() {
 
   // Uncomment this block to pass the first stage
   if (matchPattern(inputLine, pattern)) {
-    console.log(0);
+    //console.log(0);
     process.exit(0);
   } else {
-    console.log(1);
+    //console.log(1);
     process.exit(1);
   }
 }
