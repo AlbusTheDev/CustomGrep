@@ -28,18 +28,7 @@ function matchPattern(inputLine, pattern) {
 		var j = inputLine.length - arr.length; 
 		return customRegex.matchStartEnd(inputLine, arr, j);
 
-	} else if (pattern[0] === "(") {
-        var patternArr = pattern.substr(1, pattern.length - 2).split('|');
-        
-        for (let i = 0; i < patternArr.length; i++) {
-            const element = patternArr[i];
-            
-            if (matchPattern(inputLine, element)) return true;
-        }
-
-        return false;
-        
-    } else if (pattern.length > 1) {
+	} else if (pattern.length > 1) {
 		
 		var arr = customRegex.getPattern(pattern);
 		
@@ -64,6 +53,27 @@ function matchPattern(inputLine, pattern) {
                         flag = true;
                         i--;
                     }
+				} else if (patternElement[0] === "(") {
+
+					var patternArr = patternElement.substr(1, patternElement.length - 2).split('|');
+
+					flag = false;
+
+					for (let k = 0; k < patternArr.length; k++) {
+
+						const element = patternArr[k];
+						const inputLastIndex = i + j + element.length;
+
+						if (inputLastIndex > inputLine.length) continue;
+
+						const inputStr = inputLine.substr(i+j, inputLastIndex - 2);
+						
+						if (inputStr === element) {
+							flag = true;
+							break;
+						}
+					}
+
 				} else {
                     
 					flag = customRegex.handlePattern(patternElement, inputLine[i + j]);

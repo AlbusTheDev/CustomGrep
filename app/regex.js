@@ -57,11 +57,15 @@ var customRegex = {
                 i++;
             } else if (pattern[i] === '[') {
                 const index = pattern.indexOf(']', i) + 1;
-                arr.push(pattern.substr(i, index));
+                arr.push(pattern.substr(i, index - 2));
                 i = index;
             } else if (pattern[i] === '+' || pattern[i] === '?') {
                 arr[arr.length - 1] = arr[arr.length - 1] + pattern[i];
                 i++;
+            } else if (pattern[i] === '(') {
+                const index = pattern.indexOf(')', i) + 1;
+                arr.push(pattern.substr(i, index - 2));
+                i = index;
             } else {
                 arr.push(pattern[i]);
                 i++;
