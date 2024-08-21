@@ -19,7 +19,7 @@ var customRegex = {
         var flag = true;
         if (pattern[0] === "^") flag = false;
 
-        for (var i = 1; i < pattern.length; i++) {
+        for (var i = flag? 0 : 1; i < pattern.length; i++) {
             if (pattern[i] === input) return flag;
         }
 
