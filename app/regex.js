@@ -19,8 +19,8 @@ var customRegex = {
         var flag = true;
         if (pattern[0] === "^") flag = false;
 
-        for (const c of pattern) {
-            if (c === input) return flag;
+        for (var i = 1; i < pattern.length; i++) {
+            if (pattern[i] === input) return flag;
         }
 
         return !flag;
@@ -57,7 +57,7 @@ var customRegex = {
                 i++;
             } else if (pattern[i] === '[') {
                 const index = pattern.indexOf(']', i) + 1;
-                arr.push(pattern.substr(i, index - 2));
+                arr.push(pattern.substr(i, index));
                 i = index;
             } else if (pattern[i] === '+' || pattern[i] === '?') {
                 arr[arr.length - 1] = arr[arr.length - 1] + pattern[i];
@@ -80,7 +80,7 @@ var customRegex = {
         } else if (pattern === "\\w") {
             return customRegex.matchAlphanumeric(input);
         } else if (pattern[0] === "[") {
-            return customRegex.matchCharacters(input, pattern.substr(1, pattern.length - 1));
+            return customRegex.matchCharacters(input, pattern.substr(1, pattern.length - 2));
         } else if (pattern === ".") {
             return true;
         } else {
